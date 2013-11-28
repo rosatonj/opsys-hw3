@@ -1,0 +1,14 @@
+queue package 
+ * by      : Jerry Hsieh, for cs440 taught by eoneil, F91
+ * date    : Sep. 18, 1991
+ * history : December 1991 - eb borrowed code from eoneil, installed
+
+
+README
+makefile
+queue.c
+queue.h
+queue.o
+testqueue*
+testqueue.c
+testqueue.o

@@ -1,0 +1,42 @@
+CS444 hw3 Setup
+This is based on the hw2 solution, so a diff of the directories is useful:
+diff $cs444/hw2.soln $cs444/hw3.soln
+
+proc.h: process entry
+
+tunix.c: kernel startup, kernel has its own stack, which is set in startup0.s;
+         initialize process table
+         reserve process 0 for kernel itself
+         print all processes's exitcode after Q drained, shut down system;
+	TODO: support system time, sleep syscall.
+
+sched.c: schedule_one(int i), sleep(event), wakeup(event)
+         1.schedule_one(int i) runs process i or process 0 if i is not runnable
+         2.tsleep(event) stores new BLOCKED status of current process,
+ 		 then call schedule_one()
+         3.twakeup(event) makes all blocked processes waiting on event to be 
+           marked runnable
+	TODO: change schedule_one to schedule() for timesharing
+
+asmswtch.s: CPU context switch
+
+tty.c:   1.when ttywrite encounters a full output buffer, it should block
+	   the process by calling tsleep(event);
+         2. in the transmit int. handler, if a char is sent out from Q, 
+	  space is now available in TX output queue, so call twakeup(event) 
+	 also TODO: fix up read to block instead of busy-loop
+
+timer.c, ttimer.h: tick handler
+
+debuglog.[ch]: for debugging, write notes into memory area, print out
+later. 
+
+User-level code:
+crt0x.s: starts at _ustartx, call mainx  ( x=1, 2, 3 )
+ulib.s:  same as hw2
+uprog1.c uprog2.c, uprog3.c: tiny-UNIX programs starting at main1, main2, main3,
+   using only write and exit system calls 
+vprog1.c vprog2.c, vprog3.c: tiny-UNIX programs starting at main1, main2, main3,
+   using write, exit, and sleep
+wprog1.c wprog2.c, wprog3.c: tiny-UNIX programs starting at main1, main2, main3,
+   using write, exit, sleep, and read
